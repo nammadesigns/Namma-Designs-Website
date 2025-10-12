@@ -27,7 +27,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.vercel-analytics.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.vercel-analytics.com; frame-ancestors 'none';"
+          "value": "default-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.vercel-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.postimg.cc; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.vercel-analytics.com; frame-ancestors 'none';"
         }
       ]
     }

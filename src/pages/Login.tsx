@@ -25,9 +25,29 @@ const Login = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
-    email: "",
+    email: "nammadesigns01@gmail.com", // Pre-fill the email
     password: "",
   });
+
+  // Verify Supabase connection on component mount
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Supabase connection error:", error);
+          toast({
+            title: "Connection Error",
+            description: "Unable to connect to authentication service.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("Connection check failed:", error);
+      }
+    };
+    checkConnection();
+  }, [toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
