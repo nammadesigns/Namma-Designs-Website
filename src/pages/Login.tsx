@@ -39,12 +39,13 @@ const Login = () => {
 
       // Trim whitespace from credentials
       const email = credentials.email.trim();
+      const password = credentials.password;
       
-      console.log("Attempting login with:", email);
+      console.log("Attempting login with email:", email);
       
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: 'Admin@2025', // Using the new password we set in migration
+        email,
+        password
       });
 
       if (error) {
