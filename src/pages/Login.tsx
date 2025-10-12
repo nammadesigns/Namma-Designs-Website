@@ -22,29 +22,49 @@ const Login = () => {
     setLoading(true);
 
     try {
-      console.log("Attempting login with:", credentials.email); // Debug log
+      // First, check if there's an existing session and clear it
+      const existingSession = await supabase.auth.getSession();
+      if (existingSession.data.session) {
+        await supabase.auth.signOut();
+      }
+
+      // Trim the email and password to remove any accidental spaces
+      const email = credentials.email.trim();
+      const password = credentials.password;
+
+      console.log("Attempting login with:", email);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: credentials.email,
-        password: credentials.password,
+        email,
+        password,
       });
 
       if (error) {
-        console.error("Login error:", error); // Debug log
+        console.error("Login error:", error);
         toast({
-          title: "Error",
-          description: error.message || "Invalid credentials. Please try again.",
+          title: "Login Failed",
+          description: "Please check your email and password and try again.",
           variant: "destructive",
         });
         return;
       }
 
-      console.log("Login successful:", data); // Debug log
+      if (!data.user || !data.session) {
+        throw new Error("No user data received");
+      }
+
+      console.log("Login successful");
+      await supabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+      });
+      
       navigate("/admin");
     } catch (error) {
-      console.error("Unexpected error:", error); // Debug log
+      console.error("Unexpected error:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     } finally {
