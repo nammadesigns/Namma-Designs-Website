@@ -19,10 +19,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
   },
   global: {
     headers: {
-      'Content-Type': 'application/json',
-    },
-  },
-  realtime: {
-    timeout: 60000,
-  },
+      'Content-Type': 'application/json'
+    }
+  }
 });

@@ -13,8 +13,8 @@ const Login = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState({
-    email: "nammadesigns01@gmail.com", // Pre-fill the email
-    password: "",
+    email: "nammadesigns01@gmail.com", // Admin email
+    password: "NammaDesignsS@1925", // Admin password
   });
 
   // Verify Supabase connection on component mount
