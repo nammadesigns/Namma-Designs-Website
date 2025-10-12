@@ -8,18 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 
-// Debug function to check Supabase connection
-const checkSupabaseConnection = async () => {
-  try {
-    const { data, error } = await supabase.from('auth.users').select('*').limit(1);
-    console.log('Supabase connection test:', { data, error });
-    return !error;
-  } catch (e) {
-    console.error('Supabase connection test failed:', e);
-    return false;
-  }
-};
-
 const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -67,23 +55,6 @@ const Login = () => {
         email,
         password
       });
-
-      if (error) {
-        console.error("Login error:", error);
-        toast({
-          title: "Login Failed",
-          description: "Please make sure you're using the correct email address.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (data.session) {
-        console.log("Login successful");
-        navigate("/admin");
-      } else {
-        throw new Error("No session established");
-      }
 
       if (error) {
         console.error("Login error:", error);
