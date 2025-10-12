@@ -2,11 +2,11 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022"],
-    "module": "ESNext",
+    "module": "CommonJS",
     "skipLibCheck": true,
 
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -17,6 +17,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
 
     "forceConsistentCasingInFileNames": true
   },

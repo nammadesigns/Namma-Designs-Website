@@ -41,7 +41,13 @@ const Contact = () => {
     setIsSubmitting(false);
 
     if (error) {
+      console.error('Supabase error:', error);
       toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } else {
         title: "Error",
         description: "Failed to send message. Please try again.",
         variant: "destructive",
