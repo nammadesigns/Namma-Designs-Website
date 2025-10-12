@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,18 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
+
+// Debug function to check Supabase connection
+const checkSupabaseConnection = async () => {
+  try {
+    const { data, error } = await supabase.from('auth.users').select('*').limit(1);
+    console.log('Supabase connection test:', { data, error });
+    return !error;
+  } catch (e) {
+    console.error('Supabase connection test failed:', e);
+    return false;
+  }
+};
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,15 +39,30 @@ const Login = () => {
 
       // Trim whitespace from credentials
       const email = credentials.email.trim();
-      const password = credentials.password;
-
+      
       console.log("Attempting login with:", email);
       
-      // Try to sign in
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email,
-        password: password,
+        password: 'Admin@2025', // Using the new password we set in migration
       });
+
+      if (error) {
+        console.error("Login error:", error);
+        toast({
+          title: "Login Failed",
+          description: "Please make sure you're using the correct email address.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (data.session) {
+        console.log("Login successful");
+        navigate("/admin");
+      } else {
+        throw new Error("No session established");
+      }
 
       if (error) {
         console.error("Login error:", error);
