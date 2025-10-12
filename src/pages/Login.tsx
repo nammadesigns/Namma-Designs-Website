@@ -22,21 +22,19 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // First, check if there's an existing session and clear it
-      const existingSession = await supabase.auth.getSession();
-      if (existingSession.data.session) {
-        await supabase.auth.signOut();
-      }
+      // Sign out any existing session
+      await supabase.auth.signOut();
 
-      // Trim the email and password to remove any accidental spaces
+      // Trim whitespace from credentials
       const email = credentials.email.trim();
       const password = credentials.password;
 
       console.log("Attempting login with:", email);
       
+      // Try to sign in
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: email,
+        password: password,
       });
 
       if (error) {
