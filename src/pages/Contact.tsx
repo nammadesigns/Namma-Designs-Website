@@ -23,12 +23,14 @@ const Contact = () => {
 
   try {
     const response = await fetch("https://formspree.io/f/xovlgyzr", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json", // <-- Required by Formspree
+  },
+  body: JSON.stringify(formData),
+});
+
 
     if (response.ok) {
       toast({
