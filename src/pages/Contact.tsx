@@ -17,39 +17,32 @@ const Contact = () => {
     message: '',
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const response = await fetch("https://formspree.io/f/xovlgyzr", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+  const name = e.target.name.value;
+  const email = e.target.email.value;
+  const message = e.target.message.value;
 
-      if (response.ok) {
-        toast({
-          title: "Success",
-          description: "Message sent successfully!",
-        });
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        throw new Error("Failed to send message");
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive"
-      });
-      console.error("Contact form submission error:", error);
-    } finally {
-      setIsSubmitting(false);
+  try {
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, message }),
+    });
+
+    if (res.ok) {
+      alert("Message sent successfully!");
+      e.target.reset();
+    } else {
+      alert("Failed to send message. Please try again later.");
     }
-  };
+  } catch (err) {
+    console.error("Error submitting form:", err);
+    alert("Something went wrong. Please try again later.");
+  }
+};
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

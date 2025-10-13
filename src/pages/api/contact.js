@@ -1,3 +1,5 @@
+// src/pages/api/contact.js
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -6,12 +8,9 @@ export default async function handler(req, res) {
   const { name, email, message } = req.body;
 
   try {
-    // 👇 Replace this URL with your actual Formspree endpoint
     const response = await fetch("https://formspree.io/f/xovlgyzr", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, message }),
     });
 
@@ -23,7 +22,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Form submission failed" });
     }
   } catch (error) {
-    console.error("API route error:", error);
+    console.error("API error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 }
