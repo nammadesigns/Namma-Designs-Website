@@ -30,6 +30,7 @@ const Contact = () => {
         body: JSON.stringify(formData),
       });
 
+<<<<<<< HEAD
       if (response.ok) {
         toast({
           title: "Success",
@@ -40,14 +41,34 @@ const Contact = () => {
         throw new Error("Failed to send message");
       }
     } catch (error) {
+=======
+    setIsSubmitting(false);
+
+    if (error) {
+      console.error('Supabase error:', error);
+>>>>>>> eb7ea628a47911307d8691962ec5fd7f644ad81b
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
         variant: "destructive"
       });
+<<<<<<< HEAD
       console.error("Contact form submission error:", error);
     } finally {
       setIsSubmitting(false);
+=======
+    } else {
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Success!",
+        description: "Your message has been sent. We'll get back to you soon!",
+      });
+      setFormData({ name: '', email: '', message: '' });
+>>>>>>> eb7ea628a47911307d8691962ec5fd7f644ad81b
     }
   };
 
