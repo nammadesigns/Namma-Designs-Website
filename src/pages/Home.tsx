@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
@@ -10,16 +8,6 @@ import Skills from "@/components/Skills";
 import Testimonials from "@/components/Testimonials";
 
 const Home = () => {
-  useEffect(() => {
-    // Track page visit
-    const trackVisit = async () => {
-      await supabase.from('visitor_analytics').insert({
-        page_path: '/',
-        user_agent: navigator.userAgent,
-      });
-    };
-    trackVisit();
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">

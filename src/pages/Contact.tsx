@@ -18,43 +18,38 @@ const Contact = () => {
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  try {
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (response.ok) {
-      toast({
-        title: "Success!",
-        description: "Your message has been sent. We'll get back to you soon!",
+    try {
+      const response = await fetch("https://formspree.io/f/xovlgyzr", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-      setFormData({ name: "", email: "", message: "" });
-    } else {
+
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Message sent successfully!",
+        });
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        throw new Error("Failed to send message");
+      }
+    } catch (error) {
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
-        variant: "destructive",
+        variant: "destructive"
       });
+      console.error("Contact form submission error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (error) {
-    console.error("Contact form submission error:", error);
-    toast({
-      title: "Error",
-      description: "An unexpected error occurred. Please try again later.",
-      variant: "destructive",
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

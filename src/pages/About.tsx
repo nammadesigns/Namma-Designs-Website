@@ -1,18 +1,7 @@
-import { useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const About = () => {
-  useEffect(() => {
-    const trackVisit = async () => {
-      await supabase.from('visitor_analytics').insert({
-        page_path: '/about',
-        user_agent: navigator.userAgent,
-      });
-    };
-    trackVisit();
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">

@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Award, BarChart2, Instagram, Mail, Airplay, PlusCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
@@ -12,39 +10,53 @@ const iconMap: { [key: string]: any } = {
   "plus-circle": PlusCircle,
 };
 
-interface Service {
-  id: string;
-  title: string;
-  description: string;
-  icon_name: string;
-  display_order: number;
-}
+const defaultServices = [
+  {
+    id: '1',
+    title: 'Branding',
+    description: 'Crafting unique brand identities that stand out and tell your story.',
+    icon_name: 'award',
+  },
+  {
+    id: '2',
+    title: 'Marketing Design',
+    description: 'Engaging designs for flyers, brochures, and ads that drive results.',
+    icon_name: 'bar-chart-2',
+  },
+  {
+    id: '3',
+    title: 'Social Media',
+    description: 'Eye-catching social media content that builds engagement.',
+    icon_name: 'instagram',
+  },
+  {
+    id: '4',
+    title: 'Email Templates',
+    description: 'Professional email designs that convert readers into customers.',
+    icon_name: 'mail',
+  },
+  {
+    id: '5',
+    title: 'Digital Design',
+    description: 'Modern digital designs for websites and mobile applications.',
+    icon_name: 'airplay',
+  },
+  {
+    id: '6',
+    title: 'Custom Solutions',
+    description: 'Tailored design solutions for your unique business needs.',
+    icon_name: 'plus-circle',
+  }
+];
 
 const Services = () => {
-  const [services, setServices] = useState<Service[]>([]);
-
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  const fetchServices = async () => {
-    const { data, error } = await supabase
-      .from('services')
-      .select('*')
-      .eq('is_active', true)
-      .order('display_order', { ascending: true });
-
-    if (!error && data) {
-      setServices(data);
-    }
-  };
 
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-6 max-w-7xl">
         <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-12">Our Services</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => {
+          {defaultServices.map((service) => {
             const Icon = iconMap[service.icon_name] || PlusCircle;
             return (
               <Card key={service.id} className="hover:shadow-xl transition-shadow duration-300 border-border">

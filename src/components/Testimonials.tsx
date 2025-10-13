@@ -1,33 +1,35 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { Star } from "lucide-react";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface Feedback {
   id: string;
   customer_name: string;
-  rating: number;
   feedback_text: string;
+  rating: number;
 }
 
+const testimonials: Feedback[] = [
+  {
+    id: '1',
+    customer_name: 'Sarah Johnson',
+    feedback_text: 'Namma Designs transformed our brand identity completely. Their creativity and attention to detail are unmatched!',
+    rating: 5,
+  },
+  {
+    id: '2',
+    customer_name: 'Michael Chen',
+    feedback_text: 'Professional, responsive, and incredibly talented. They delivered exactly what we needed for our social media campaign.',
+    rating: 5,
+  },
+  {
+    id: '3',
+    customer_name: 'Amanda Patel',
+    feedback_text: 'The team at Namma Designs goes above and beyond. They not only met but exceeded our expectations.',
+    rating: 5,
+  }
+];
+
 const Testimonials = () => {
-  const [testimonials, setTestimonials] = useState<Feedback[]>([]);
-
-  useEffect(() => {
-    fetchTestimonials();
-  }, []);
-
-  const fetchTestimonials = async () => {
-    const { data, error } = await supabase
-      .from('customer_feedback')
-      .select('*')
-      .eq('is_approved', true)
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setTestimonials(data);
-    }
-  };
 
   return (
     <section className="py-20 bg-secondary">
