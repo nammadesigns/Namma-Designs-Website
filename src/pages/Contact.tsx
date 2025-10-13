@@ -18,43 +18,43 @@ const Contact = () => {
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      const response = await fetch("https://formspree.io/f/xovlgyzr", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+  try {
+    const response = await fetch("https://formspree.io/f/xovlgyzr", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      toast({
+        title: "Success!",
+        description: "Your message has been sent. We'll get back to you soon!",
       });
-
-      if (response.ok) {
-        toast({
-          title: "Success",
-          description: "Message sent successfully!",
-        });
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        throw new Error("Failed to send message");
-      }
-    } catch (error) {
-
-    setIsSubmitting(false);
-
-    if (error) {
-      console.error('Supabase error:', error);
-
+      setFormData({ name: '', email: '', message: '' });
+    } else {
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
+    }
+  } catch (error) {
+    console.error("Contact form submission error:", error);
+    toast({
+      title: "Error",
+      description: "An unexpected error occurred. Please try again later.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
-      console.error("Contact form submission error:", error);
-    } finally {
-      setIsSubmitting(false);
 
     } else {
         title: "Error",
