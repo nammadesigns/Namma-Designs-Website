@@ -4,12 +4,12 @@ const securityHeaders = [
   {
     key: "Content-Security-Policy",
     value: `
-      default-src 'self';
-      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.vercel-analytics.com;
-      connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.vercel-analytics.com https://formspree.io;
-      img-src 'self' data: https:;
+      default-src 'self' blob: data:;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://*.supabase.co https://*.vercel-analytics.com https://vercel.live;
+      connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.vercel-analytics.com https://formspree.io https://vercel.live;
+      img-src 'self' blob: data: https:;
       style-src 'self' 'unsafe-inline';
-      font-src 'self';
+      font-src 'self' data:;
     `.replace(/\n/g, ""),
   },
 ];
