@@ -5,6 +5,13 @@
   text-align: center;
 }
 
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
