@@ -1,3 +1,5 @@
+// pages/api/contact.js
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -18,7 +20,10 @@ export default async function handler(req, res) {
     if (formResponse.ok) {
       return res.status(200).json({ success: true });
     } else {
-      return res.status(400).json({ success: false, error: "Formspree failed" });
+      const data = await formResponse.json();
+      return res
+        .status(400)
+        .json({ success: false, error: data.error || "Formspree failed" });
     }
   } catch (err) {
     console.error("Server error:", err);

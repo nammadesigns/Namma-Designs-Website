@@ -23,19 +23,19 @@ const Contact = () => {
 
   try {
     const response = await fetch("/api/contact", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify(formData),
-});
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
 
     if (response.ok) {
       toast({
         title: "Success!",
         description: "Your message has been sent. We'll get back to you soon!",
       });
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({ name: "", email: "", message: "" });
     } else {
       toast({
         title: "Error",
