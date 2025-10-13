@@ -56,21 +56,6 @@ const Contact = () => {
 };
 
 
-    } else {
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success!",
-        description: "Your message has been sent. We'll get back to you soon!",
-      });
-      setFormData({ name: '', email: '', message: '' });
-
-    }
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
