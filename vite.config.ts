@@ -9,6 +9,16 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      '/api/contact': {
+        target: 'https://formspree.io/f/xovlgyzr',
+        changeOrigin: true,
+        secure: true,
+        headers: {
+          'Accept': 'application/json',
+        },
+      },
+    },
   },
   plugins: [react()],
   resolve: {
