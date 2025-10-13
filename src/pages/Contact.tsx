@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -18,112 +17,102 @@ const Contact = () => {
     message: '',
   });
 
-  useEffect(() => {
-    const trackVisit = async () => {
-      await supabase.from('visitor_analytics').insert({
-        page_path: '/contact',
-        user_agent: navigator.userAgent,
-      });
-    };
-    trackVisit();
-  }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const { error } = await supabase.from('contact_submissions').insert({
-      name: formData.name,
-      email: formData.email,
-      message: formData.message,
-    });
+    try {
+      const response = await fetch("https://formspree.io/f/xovlgyzr", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    setIsSubmitting(false);
-
-    if (error) {
+      if (response.ok) {
+        toast({
+          title: "Success",
+          description: "Message sent successfully!",
+        });
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        throw new Error("Failed to send message");
+      }
+    } catch (error) {
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
-        variant: "destructive",
+        variant: "destructive"
       });
-    } else {
-      toast({
-        title: "Success!",
-        description: "Your message has been sent. We'll get back to you soon!",
-      });
-      setFormData({ name: '', email: '', message: '' });
+      console.error("Contact form submission error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 bg-secondary">
-        <section className="py-20">
-          <div className="container mx-auto px-6 max-w-2xl">
-            <h1 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-12">
-              Contact Us
-            </h1>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-center">Send us a Message</CardTitle>
-                <p className="text-center text-muted-foreground">
-                  Ready to start your next project? Send us a message and we'll get back to you shortly.
-                </p>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea
-                      id="message"
-                      rows={4}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      required
-                    />
-                  </div>
-                  
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                  </Button>
-                </form>
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-                <div className="text-center mt-6">
-                  <p className="text-muted-foreground">Or email us directly at:</p>
-                  <a 
-                    href="mailto:nammadesigns01@gmail.com" 
-                    className="text-primary hover:underline font-semibold"
-                  >
-                    nammadesigns01@gmail.com
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="container mx-auto px-4 py-8">
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle className="text-3xl font-bold text-center">Contact Us</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="message">Message</Label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={5}
+                />
+              </div>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Sending..." : "Send Message"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </main>
       <Footer />
     </div>
