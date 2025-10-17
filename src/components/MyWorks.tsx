@@ -13,7 +13,7 @@ const MyWorks: React.FC = () => {
   const [designs, setDesigns] = useState<Work[]>([
     { id: "1", image: "/images/deepavali.png", title: "Festival Poster Design" },
     { id: "2", image: "/images/sadgurusagara.jpg", title: "Events and Decoraters Poster" },
-    { id: "3", image: "/images/work3.jpg", title: "YouTube Thumbnail" },
+    { id: "3", image: "https://i.postimg.cc/hPJSdvH7/ganesh.jpg", title: "YouTube Thumbnail" },
     { id: "4", image: "/images/work4.jpg", title: "Product Ad Banner" },
   ]);
 
