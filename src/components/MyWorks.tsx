@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import PinnedFrame from "./PinnedFrame";
-import { getWorks, Work } from "../lib/firebaseService";
+import { getWorks, Work } from "../lib/localStorageService";
 
 const MyWorks: React.FC = () => {
   const [designs, setDesigns] = useState<Work[]>([]);

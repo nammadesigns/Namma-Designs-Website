@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Star, MessageSquare, Send } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
-import { addFeedback, getFeedbacks, Feedback } from "../lib/firebaseService";
+import { addFeedback, getFeedbacks, Feedback } from "../lib/localStorageService";
 
 
 
