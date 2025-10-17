@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface PinnedFrameProps {
   image: string;
@@ -44,32 +45,33 @@ const PinnedFrame: React.FC<PinnedFrameProps> = ({ image, title }) => {
       </div>
 
       {/* Modal */}
-      {isOpen && (
+      {isOpen && createPortal(
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed top-0 left-0 w-full h-full bg-black/90 flex items-center justify-center z-[99999] p-4"
-          style={{ position: 'fixed', zIndex: 99999 }}
+          className="fixed top-0 left-0 w-screen h-screen bg-black/90 flex items-center justify-center p-4"
+          style={{ position: 'fixed', zIndex: 999999, margin: 0, padding: '1rem' }}
         >
           <div 
-            className="relative flex flex-col items-center justify-center max-w-[95vw] max-h-[95vh]"
+            className="relative flex flex-col items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             <img
               src={image}
               alt={title}
-              className="max-h-[80vh] max-w-[90vw] w-auto h-auto object-contain rounded-lg shadow-2xl"
+              className="max-h-[85vh] max-w-[90vw] w-auto h-auto object-contain rounded-lg shadow-2xl"
             />
-            <h3 className="text-white text-lg font-semibold mt-4 text-center px-4 max-w-[90vw]">
+            <h3 className="text-white text-lg font-semibold mt-4 text-center px-4 max-w-[90vw] break-words">
               {title}
             </h3>
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 bg-white/90 text-black rounded-full w-10 h-10 flex items-center justify-center font-bold shadow-lg hover:bg-white transition-colors z-10"
+              className="absolute top-4 right-4 bg-white/90 text-black rounded-full w-10 h-10 flex items-center justify-center font-bold shadow-lg hover:bg-white transition-colors"
             >
               ✕
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
