@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.supabase.co https://*.vercel-analytics.com https://*.googletagmanager.com https://*.google-analytics.com; object-src 'none';"
+          "value": "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.vercel-analytics.com https://*.googletagmanager.com https://*.google-analytics.com; object-src 'none';"
         }
       ]
     }
