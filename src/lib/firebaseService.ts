@@ -33,8 +33,19 @@ export interface Feedback {
 // Works functions
 export const addWork = async (title: string, imageFile: File): Promise<void> => {
   try {
+    // Validate file size (max 5MB)
+    if (imageFile.size > 5 * 1024 * 1024) {
+      throw new Error('File size must be less than 5MB');
+    }
+
+    // Validate file type
+    if (!imageFile.type.startsWith('image/')) {
+      throw new Error('File must be an image');
+    }
+
     // Upload image to Firebase Storage
-    const imageRef = ref(storage, `works/${Date.now()}_${imageFile.name}`);
+    const sanitizedFileName = imageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const imageRef = ref(storage, `works/${Date.now()}_${sanitizedFileName}`);
     const snapshot = await uploadBytes(imageRef, imageFile);
     const imageUrl = await getDownloadURL(snapshot.ref);
 
@@ -46,7 +57,10 @@ export const addWork = async (title: string, imageFile: File): Promise<void> => 
     });
   } catch (error) {
     console.error('Error adding work:', error);
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(`Upload failed: ${error.message}`);
+    }
+    throw new Error('Upload failed: Unknown error');
   }
 };
 
