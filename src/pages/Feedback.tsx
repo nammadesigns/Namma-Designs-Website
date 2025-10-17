@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Star, MessageSquare, Send } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
-import { addFeedback, getFeedbacks, Feedback } from "../lib/localStorageService";
+import { addFeedback, getFeedbacks, Feedback } from "../lib/supabaseService";
 
 
 
@@ -41,7 +41,7 @@ const FeedbackPage: React.FC = () => {
         feedback_text: message,
         rating,
         date: new Date().toLocaleDateString(),
-        isPinned: false
+        is_pinned: false
       });
       
       setName("");

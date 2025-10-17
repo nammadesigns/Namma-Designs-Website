@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Palette } from "lucide-react";
 import { Button } from "../components/ui/button";
 import PinnedFrame from "../components/PinnedFrame";
-import { getWorks, Work } from "../lib/localStorageService";
+import { getWorks, Work } from "../lib/supabaseService";
 
 
 

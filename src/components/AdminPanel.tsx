@@ -11,7 +11,7 @@ import {
   updateFeedback,
   Work,
   Feedback 
-} from "../lib/localStorageService";
+} from "../lib/supabaseService";
 
 
 
@@ -136,11 +136,11 @@ const AdminPanel: React.FC = () => {
     const feedback = feedbacks.find(f => f.id === id);
     if (!feedback) return;
     
-    const newPinnedStatus = !feedback.isPinned;
+    const newPinnedStatus = !feedback.is_pinned;
     
     // Check if trying to pin and already have 3 pinned
     if (newPinnedStatus) {
-      const pinnedCount = feedbacks.filter(f => f.isPinned && f.id !== id).length;
+      const pinnedCount = feedbacks.filter(f => f.is_pinned && f.id !== id).length;
       if (pinnedCount >= 3) {
         alert("You can only pin up to 3 feedbacks");
         return;
@@ -148,7 +148,7 @@ const AdminPanel: React.FC = () => {
     }
     
     try {
-      await updateFeedback(id, { isPinned: newPinnedStatus });
+      await updateFeedback(id, { is_pinned: newPinnedStatus });
       await loadFeedbacks();
     } catch (error) {
       console.error('Error updating feedback:', error);
@@ -156,8 +156,8 @@ const AdminPanel: React.FC = () => {
     }
   };
 
-  const pinnedFeedbacks = feedbacks.filter(f => f.isPinned);
-  const unpinnedFeedbacks = feedbacks.filter(f => !f.isPinned);
+  const pinnedFeedbacks = feedbacks.filter(f => f.is_pinned);
+  const unpinnedFeedbacks = feedbacks.filter(f => !f.is_pinned);
 
   if (!isAuthenticated) {
     return (

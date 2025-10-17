@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
-import { getFeedbacks, Feedback } from "../lib/localStorageService";
+import { getFeedbacks, Feedback } from "../lib/supabaseService";
 
 
 
@@ -17,7 +17,7 @@ const Testimonials = () => {
   const loadFeedbacks = async () => {
     try {
       const feedbacksData = await getFeedbacks();
-      const pinnedFeedbacks = feedbacksData.filter(f => f.isPinned);
+      const pinnedFeedbacks = feedbacksData.filter(f => f.is_pinned);
       setTestimonials(pinnedFeedbacks.slice(0, 3));
     } catch (error) {
       console.error('Error loading feedbacks:', error);
