@@ -52,6 +52,7 @@
     "embla-carousel-react": "^8.6.0",
     "express": "^5.1.0",
     "firebase": "^10.14.1",
+
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
     "next-sitemap": "^4.2.3",

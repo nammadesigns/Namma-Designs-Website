@@ -3,22 +3,25 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Palette } from "lucide-react";
 import { Button } from "../components/ui/button";
 import PinnedFrame from "../components/PinnedFrame";
+import { getWorks, Work } from "../lib/firebaseService";
 
-interface Work {
-  id: string;
-  image: string;
-  title: string;
-}
+
 
 const OurWorks: React.FC = () => {
   const [works, setWorks] = useState<Work[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("portfolio-works");
-    if (saved) {
-      setWorks(JSON.parse(saved));
-    }
+    loadWorks();
   }, []);
+
+  const loadWorks = async () => {
+    try {
+      const worksData = await getWorks();
+      setWorks(worksData);
+    } catch (error) {
+      console.error('Error loading works:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">

@@ -3,14 +3,9 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Star, MessageSquare, Send } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
+import { addFeedback, getFeedbacks, Feedback } from "../lib/firebaseService";
 
-interface Feedback {
-  id: string;
-  customer_name: string;
-  feedback_text: string;
-  rating: number;
-  date: string;
-}
+
 
 const FeedbackPage: React.FC = () => {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
@@ -20,38 +15,46 @@ const FeedbackPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("client-feedbacks");
-    if (saved) {
-      setFeedbacks(JSON.parse(saved));
-    }
+    loadFeedbacks();
   }, []);
 
-  const saveFeedbacks = (newFeedbacks: Feedback[]) => {
-    localStorage.setItem("client-feedbacks", JSON.stringify(newFeedbacks));
-    setFeedbacks(newFeedbacks);
+  const loadFeedbacks = async () => {
+    try {
+      const feedbacksData = await getFeedbacks();
+      setFeedbacks(feedbacksData);
+    } catch (error) {
+      console.error('Error loading feedbacks:', error);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !message) return;
 
     setIsSubmitting(true);
     
-    const newFeedback: Feedback = {
-      id: Date.now().toString(),
-      customer_name: name,
-      feedback_text: message,
-      rating,
-      date: new Date().toLocaleDateString(),
-    };
-
-    saveFeedbacks([newFeedback, ...feedbacks]);
-    setName("");
-    setMessage("");
-    setRating(5);
-    setIsSubmitting(false);
-    
-    alert("Thank you for your feedback! We appreciate your input.");
+    try {
+      await addFeedback({
+        customer_name: name,
+        feedback_text: message,
+        rating,
+        date: new Date().toLocaleDateString(),
+        isPinned: false
+      });
+      
+      setName("");
+      setMessage("");
+      setRating(5);
+      await loadFeedbacks();
+      alert("Thank you for your feedback! We appreciate your input.");
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      alert("Failed to submit feedback. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

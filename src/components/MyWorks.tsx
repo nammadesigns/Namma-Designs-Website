@@ -2,31 +2,23 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import PinnedFrame from "./PinnedFrame";
-
-interface Work {
-  id: string;
-  image: string;
-  title: string;
-}
+import { getWorks, Work } from "../lib/firebaseService";
 
 const MyWorks: React.FC = () => {
-  const [designs, setDesigns] = useState<Work[]>([
-    { id: "1", image: "/images/deepavali.png", title: "Festival Poster Design" },
-    { id: "2", image: "/images/sadgurusagara.jpg", title: "Events and Decoraters Poster" },
-    { id: "3", image: "https://i.postimg.cc/hPJSdvH7/ganesh.jpg", title: "YouTube Thumbnail" },
-    { id: "4", image: "/images/work4.jpg", title: "Product Ad Banner" },
-  ]);
+  const [designs, setDesigns] = useState<Work[]>([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("portfolio-works");
-    if (saved) {
-      const savedWorks = JSON.parse(saved);
-      setDesigns(savedWorks);
-    } else {
-      // Save default works to localStorage if none exist
-      localStorage.setItem("portfolio-works", JSON.stringify(designs));
-    }
+    loadWorks();
   }, []);
+
+  const loadWorks = async () => {
+    try {
+      const worksData = await getWorks();
+      setDesigns(worksData);
+    } catch (error) {
+      console.error('Error loading works:', error);
+    }
+  };
 
   return (
     <section

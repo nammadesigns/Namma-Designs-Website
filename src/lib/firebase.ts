@@ -7,13 +7,13 @@ import { getAnalytics } from "firebase/analytics";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyApLszW7n9KcTBthOljztn2R7pRlY6YYv0",
-  authDomain: "namma-designs-b018e.firebaseapp.com",
-  projectId: "namma-designs-b018e",
-  storageBucket: "namma-designs-b018e.firebasestorage.app",
-  messagingSenderId: "260146839975",
-  appId: "1:260146839975:web:2ccec868cc1b27b466b682",
-  measurementId: "G-9WTP4G19FR"
+  apiKey: "AIzaSyBlSa5dhWAVKLElXz-a3hWWHHRDw2LSroA",
+  authDomain: "namma-designs-c8d92.firebaseapp.com",
+  projectId: "namma-designs-c8d92",
+  storageBucket: "namma-designs-c8d92.firebasestorage.app",
+  messagingSenderId: "259140547187",
+  appId: "1:259140547187:web:3901051c0a662c0917f006",
+  measurementId: "G-4XGSSQ3YFP"
 };
 
 // Initialize Firebase

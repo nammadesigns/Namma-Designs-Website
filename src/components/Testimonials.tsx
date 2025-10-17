@@ -3,27 +3,26 @@ import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
+import { getFeedbacks, Feedback } from "../lib/firebaseService";
 
-interface Feedback {
-  id: string;
-  customer_name: string;
-  feedback_text: string;
-  rating: number;
-  date?: string;
-  isPinned?: boolean;
-}
+
 
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState<Feedback[]>([]);
 
   useEffect(() => {
-    const savedFeedbacks = localStorage.getItem("client-feedbacks");
-    if (savedFeedbacks) {
-      const feedbacks: Feedback[] = JSON.parse(savedFeedbacks);
-      const pinnedFeedbacks = feedbacks.filter(f => f.isPinned);
-      setTestimonials(pinnedFeedbacks.slice(0, 3));
-    }
+    loadFeedbacks();
   }, []);
+
+  const loadFeedbacks = async () => {
+    try {
+      const feedbacksData = await getFeedbacks();
+      const pinnedFeedbacks = feedbacksData.filter(f => f.isPinned);
+      setTestimonials(pinnedFeedbacks.slice(0, 3));
+    } catch (error) {
+      console.error('Error loading feedbacks:', error);
+    }
+  };
 
   return (
     <section className="py-20 bg-secondary">

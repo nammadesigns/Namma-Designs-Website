@@ -2,21 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Upload, Trash2, Pin, Star, Home } from "lucide-react";
+import { 
+  addWork as firebaseAddWork, 
+  getWorks, 
+  deleteWork as firebaseDeleteWork,
+  getFeedbacks,
+  deleteFeedback as firebaseDeleteFeedback,
+  updateFeedback,
+  Work,
+  Feedback 
+} from "../lib/firebaseService";
 
-interface Work {
-  id: string;
-  image: string;
-  title: string;
-}
 
-interface Feedback {
-  id: string;
-  customer_name: string;
-  feedback_text: string;
-  rating: number;
-  date: string;
-  isPinned?: boolean;
-}
 
 const AdminPanel: React.FC = () => {
   const [works, setWorks] = useState<Work[]>([]);
@@ -33,16 +30,27 @@ const AdminPanel: React.FC = () => {
       setIsAuthenticated(true);
     }
     
-    const saved = localStorage.getItem("portfolio-works");
-    if (saved) {
-      setWorks(JSON.parse(saved));
-    }
-    
-    const savedFeedbacks = localStorage.getItem("client-feedbacks");
-    if (savedFeedbacks) {
-      setFeedbacks(JSON.parse(savedFeedbacks));
-    }
+    loadWorks();
+    loadFeedbacks();
   }, []);
+
+  const loadWorks = async () => {
+    try {
+      const worksData = await getWorks();
+      setWorks(worksData);
+    } catch (error) {
+      console.error('Error loading works:', error);
+    }
+  };
+
+  const loadFeedbacks = async () => {
+    try {
+      const feedbacksData = await getFeedbacks();
+      setFeedbacks(feedbacksData);
+    } catch (error) {
+      console.error('Error loading feedbacks:', error);
+    }
+  };
 
   const handleLogin = () => {
     if (password === "admin12345") {
@@ -59,18 +67,9 @@ const AdminPanel: React.FC = () => {
     localStorage.removeItem("admin-auth");
   };
 
-  const saveWorks = (newWorks: Work[]) => {
-    try {
-      localStorage.setItem("portfolio-works", JSON.stringify(newWorks));
-      setWorks(newWorks);
-    } catch (error) {
-      if (error instanceof DOMException && error.code === 22) {
-        alert("Storage quota exceeded. Please delete some works or use smaller images.");
-      } else {
-        alert("Failed to save work. Please try again.");
-      }
-    }
-  };
+
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -81,78 +80,80 @@ const AdminPanel: React.FC = () => {
         return;
       }
       
+      setImageFile(file);
+      
+      // Show preview
       const reader = new FileReader();
       reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
-          // Resize image to max 800px width while maintaining aspect ratio
-          const maxWidth = 800;
-          const ratio = Math.min(maxWidth / img.width, maxWidth / img.height);
-          canvas.width = img.width * ratio;
-          canvas.height = img.height * ratio;
-          
-          ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
-          const compressedImage = canvas.toDataURL('image/jpeg', 0.7);
-          setImage(compressedImage);
-        };
-        img.src = event.target?.result as string;
+        setImage(event.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const addWork = () => {
-    if (!title || !image) return;
-    const newWork: Work = {
-      id: Date.now().toString(),
-      title,
-      image,
-    };
-    saveWorks([...works, newWork]);
-    setTitle("");
-    setImage("");
-  };
-
-  const deleteWork = (id: string) => {
-    saveWorks(works.filter(w => w.id !== id));
-  };
-
-  const saveFeedbacks = (newFeedbacks: Feedback[]) => {
-    try {
-      localStorage.setItem("client-feedbacks", JSON.stringify(newFeedbacks));
-      setFeedbacks(newFeedbacks);
-    } catch (error) {
-      if (error instanceof DOMException && error.code === 22) {
-        alert("Storage quota exceeded. Please delete some feedbacks.");
-      } else {
-        alert("Failed to save feedback. Please try again.");
-      }
-    }
-  };
-
-  const deleteFeedback = (id: string) => {
-    saveFeedbacks(feedbacks.filter(f => f.id !== id));
-  };
-
-  const togglePinFeedback = (id: string) => {
-    const updatedFeedbacks = feedbacks.map(feedback => {
-      if (feedback.id === id) {
-        return { ...feedback, isPinned: !feedback.isPinned };
-      }
-      return feedback;
-    });
-    
-    // Ensure only top 3 can be pinned
-    const pinnedCount = updatedFeedbacks.filter(f => f.isPinned).length;
-    if (pinnedCount > 3) {
-      alert("You can only pin up to 3 feedbacks");
+  const addWork = async () => {
+    if (!title || !imageFile) {
+      alert("Please enter title and select an image");
       return;
     }
     
-    saveFeedbacks(updatedFeedbacks);
+    try {
+      await firebaseAddWork(title, imageFile);
+      setTitle("");
+      setImage("");
+      setImageFile(null);
+      await loadWorks();
+      alert("Work added successfully!");
+    } catch (error) {
+      console.error('Error adding work:', error);
+      alert("Failed to add work. Please try again.");
+    }
+  };
+
+  const deleteWork = async (id: string) => {
+    try {
+      await firebaseDeleteWork(id);
+      await loadWorks();
+    } catch (error) {
+      console.error('Error deleting work:', error);
+      alert("Failed to delete work. Please try again.");
+    }
+  };
+
+
+
+  const deleteFeedback = async (id: string) => {
+    try {
+      await firebaseDeleteFeedback(id);
+      await loadFeedbacks();
+    } catch (error) {
+      console.error('Error deleting feedback:', error);
+      alert("Failed to delete feedback. Please try again.");
+    }
+  };
+
+  const togglePinFeedback = async (id: string) => {
+    const feedback = feedbacks.find(f => f.id === id);
+    if (!feedback) return;
+    
+    const newPinnedStatus = !feedback.isPinned;
+    
+    // Check if trying to pin and already have 3 pinned
+    if (newPinnedStatus) {
+      const pinnedCount = feedbacks.filter(f => f.isPinned && f.id !== id).length;
+      if (pinnedCount >= 3) {
+        alert("You can only pin up to 3 feedbacks");
+        return;
+      }
+    }
+    
+    try {
+      await updateFeedback(id, { isPinned: newPinnedStatus });
+      await loadFeedbacks();
+    } catch (error) {
+      console.error('Error updating feedback:', error);
+      alert("Failed to update feedback. Please try again.");
+    }
   };
 
   const pinnedFeedbacks = feedbacks.filter(f => f.isPinned);
