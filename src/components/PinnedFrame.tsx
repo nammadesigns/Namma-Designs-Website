@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface PinnedFrameProps {
   image: string;
@@ -7,6 +7,17 @@ interface PinnedFrameProps {
 
 const PinnedFrame: React.FC<PinnedFrameProps> = ({ image, title }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -36,23 +47,24 @@ const PinnedFrame: React.FC<PinnedFrameProps> = ({ image, title }) => {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[9999] p-4 animate-fadeIn"
+          className="fixed top-0 left-0 w-full h-full bg-black/90 flex items-center justify-center z-[99999] p-4"
+          style={{ position: 'fixed', zIndex: 99999 }}
         >
           <div 
-            className="relative max-w-full max-h-full flex flex-col items-center"
+            className="relative flex flex-col items-center justify-center max-w-[95vw] max-h-[95vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <img
               src={image}
               alt={title}
-              className="max-h-[85vh] max-w-[95vw] w-auto h-auto object-contain rounded-lg shadow-2xl border-2 border-white/20"
+              className="max-h-[80vh] max-w-[90vw] w-auto h-auto object-contain rounded-lg shadow-2xl"
             />
-            <h3 className="text-white text-lg sm:text-xl font-semibold mt-4 text-center px-4">
+            <h3 className="text-white text-lg font-semibold mt-4 text-center px-4 max-w-[90vw]">
               {title}
             </h3>
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute -top-2 -right-2 sm:top-2 sm:right-2 bg-white text-black rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-bold shadow-lg hover:bg-gray-200 transition-colors text-sm sm:text-base"
+              className="absolute top-4 right-4 bg-white/90 text-black rounded-full w-10 h-10 flex items-center justify-center font-bold shadow-lg hover:bg-white transition-colors z-10"
             >
               ✕
             </button>
