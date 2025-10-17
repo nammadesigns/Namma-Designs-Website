@@ -32,6 +32,12 @@ const Header = () => {
           >
             About Us
           </Link>
+          <Link 
+            to="/ourworks" 
+            className={`transition-colors duration-300 ${isActive('/ourworks') ? 'text-primary font-semibold' : 'text-muted-foreground hover:text-primary'}`}
+          >
+            Our Works
+          </Link>
           <Link to="/contact">
             <Button 
               className={`transition-colors duration-300 ${isActive('/contact') ? 'bg-primary/90' : ''}`}
@@ -64,6 +70,13 @@ const Header = () => {
             onClick={() => setIsMenuOpen(false)}
           >
             About Us
+          </Link>
+          <Link 
+            to="/ourworks" 
+            className="block py-2 px-4 text-sm text-muted-foreground hover:bg-secondary"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Our Works
           </Link>
           <Link 
             to="/contact" 

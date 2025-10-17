@@ -6,6 +6,7 @@ import Services from "@/components/Services";
 import Affordability from "@/components/Affordability";
 import Skills from "@/components/Skills";
 import Testimonials from "@/components/Testimonials";
+import MyWorks from "@/components/MyWorks"; //Myworks 
 
 const Home = () => {
 
@@ -18,6 +19,7 @@ const Home = () => {
         <Affordability />
         <Services />
         <Skills />
+         <MyWorks />
         <Testimonials />
       </main>
       <Footer />

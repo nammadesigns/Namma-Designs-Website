@@ -1,4 +1,7 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
+import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
 
 interface Feedback {
@@ -6,30 +9,21 @@ interface Feedback {
   customer_name: string;
   feedback_text: string;
   rating: number;
+  date?: string;
+  isPinned?: boolean;
 }
 
-const testimonials: Feedback[] = [
-  {
-    id: '1',
-    customer_name: 'Sarah Johnson',
-    feedback_text: 'Namma Designs transformed our brand identity completely. Their creativity and attention to detail are unmatched!',
-    rating: 5,
-  },
-  {
-    id: '2',
-    customer_name: 'Michael Chen',
-    feedback_text: 'Professional, responsive, and incredibly talented. They delivered exactly what we needed for our social media campaign.',
-    rating: 5,
-  },
-  {
-    id: '3',
-    customer_name: 'Amanda Patel',
-    feedback_text: 'The team at Namma Designs goes above and beyond. They not only met but exceeded our expectations.',
-    rating: 5,
-  }
-];
-
 const Testimonials = () => {
+  const [testimonials, setTestimonials] = useState<Feedback[]>([]);
+
+  useEffect(() => {
+    const savedFeedbacks = localStorage.getItem("client-feedbacks");
+    if (savedFeedbacks) {
+      const feedbacks: Feedback[] = JSON.parse(savedFeedbacks);
+      const pinnedFeedbacks = feedbacks.filter(f => f.isPinned);
+      setTestimonials(pinnedFeedbacks.slice(0, 3));
+    }
+  }, []);
 
   return (
     <section className="py-20 bg-secondary">
@@ -38,9 +32,13 @@ const Testimonials = () => {
           What Our Clients Say
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial) => (
-            <Card key={testimonial.id} className="hover:shadow-lg transition-shadow">
+        <div className={`grid gap-8 ${
+          testimonials.length === 1 
+            ? 'grid-cols-1 place-items-center max-w-md mx-auto' 
+            : 'grid-cols-1 md:grid-cols-3'
+        }`}>
+          {testimonials.slice(0, 3).map((testimonial) => (
+            <Card key={testimonial.id} className="hover:shadow-lg transition-shadow w-full">
               <CardHeader>
                 <div className="flex items-center gap-1 mb-2">
                   {[...Array(testimonial.rating)].map((_, i) => (
@@ -54,6 +52,14 @@ const Testimonials = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+        
+        <div className="text-center mt-12">
+          <Link to="/feedback">
+            <Button size="lg" className="animate-fade-in transform hover:scale-105 transition-transform">
+              Give Feedback
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
