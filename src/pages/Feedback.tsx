@@ -4,11 +4,17 @@ import { ArrowLeft, Star, MessageSquare, Send } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader } from "../components/ui/card";
 import { addFeedback, getFeedbacks, Feedback } from "../lib/supabaseService";
+import { useToast } from "../hooks/use-toast";
 
 
 
 const FeedbackPage: React.FC = () => {
+  const { toast } = useToast();
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(5);
@@ -48,10 +54,17 @@ const FeedbackPage: React.FC = () => {
       setMessage("");
       setRating(5);
       await loadFeedbacks();
-      alert("Thank you for your feedback! We appreciate your input.");
+      toast({
+        title: "Success!",
+        description: "Thank you for your feedback! We appreciate your input.",
+      });
     } catch (error) {
       console.error('Error submitting feedback:', error);
-      alert("Failed to submit feedback. Please try again.");
+      toast({
+        title: "Error",
+        description: "Failed to submit feedback. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }

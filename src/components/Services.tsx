@@ -1,5 +1,7 @@
-import { Award, BarChart2, Instagram, Mail, Airplay, PlusCircle } from "lucide-react";
+import { Award, BarChart2, Instagram, Mail, Airplay, PlusCircle, Tag } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 const iconMap: { [key: string]: any } = {
   "award": Award,
@@ -70,6 +72,15 @@ const Services = () => {
               </Card>
             );
           })}
+        </div>
+        
+        <div className="text-center mt-12">
+          <Link to="/offers">
+            <Button size="lg" className="animate-fade-in transform hover:scale-105 transition-transform">
+              <Tag className="mr-2" size={20} />
+              View Special Offers
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

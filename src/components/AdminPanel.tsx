@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
-import { Upload, Trash2, Pin, Star, Home } from "lucide-react";
+import { Upload, Trash2, Pin, Star, Home, Tag } from "lucide-react";
 import { 
   addWork as firebaseAddWork, 
   getWorks, 
@@ -9,9 +9,15 @@ import {
   getFeedbacks,
   deleteFeedback as firebaseDeleteFeedback,
   updateFeedback,
+  addOffer,
+  getOffers,
+  deleteOffer,
+  updateOffer,
   Work,
-  Feedback 
+  Feedback,
+  Offer
 } from "../lib/supabaseService";
+import { supabase } from "../lib/supabase";
 
 
 
@@ -22,7 +28,14 @@ const AdminPanel: React.FC = () => {
   const [image, setImage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
-  const [activeTab, setActiveTab] = useState<'works' | 'feedbacks'>('works');
+  const [activeTab, setActiveTab] = useState<'works' | 'feedbacks' | 'offers'>('works');
+  const [offers, setOffers] = useState<Offer[]>([]);
+  const [offerTitle, setOfferTitle] = useState("");
+  const [offerDescription, setOfferDescription] = useState("");
+  const [offerDiscount, setOfferDiscount] = useState("");
+  const [offerValidUntil, setOfferValidUntil] = useState("");
+  const [offerImage, setOfferImage] = useState("");
+  const [offerImageFile, setOfferImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     const auth = localStorage.getItem("admin-auth");
@@ -32,6 +45,7 @@ const AdminPanel: React.FC = () => {
     
     loadWorks();
     loadFeedbacks();
+    loadOffers();
   }, []);
 
   const loadWorks = async () => {
@@ -49,6 +63,15 @@ const AdminPanel: React.FC = () => {
       setFeedbacks(feedbacksData);
     } catch (error) {
       console.error('Error loading feedbacks:', error);
+    }
+  };
+
+  const loadOffers = async () => {
+    try {
+      const offersData = await getOffers();
+      setOffers(offersData);
+    } catch (error) {
+      console.error('Error loading offers:', error);
     }
   };
 
@@ -156,6 +179,94 @@ const AdminPanel: React.FC = () => {
     }
   };
 
+  const handleOfferImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Image size should be less than 5MB. Please compress your image.");
+        return;
+      }
+      
+      setOfferImageFile(file);
+      
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setOfferImage(event.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const addNewOffer = async () => {
+    if (!offerTitle || !offerDescription || !offerDiscount || !offerValidUntil) {
+      alert("Please fill all offer fields");
+      return;
+    }
+    
+    try {
+      let imageUrl = "";
+      
+      if (offerImageFile) {
+        const fileName = `offer_${Date.now()}_${offerImageFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('offers')
+          .upload(fileName, offerImageFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('offers')
+          .getPublicUrl(fileName);
+        
+        imageUrl = publicUrl;
+      }
+      
+      await addOffer({
+        title: offerTitle,
+        description: offerDescription,
+        discount: offerDiscount,
+        valid_until: offerValidUntil,
+        is_active: true,
+        image: imageUrl || undefined
+      });
+      
+      setOfferTitle("");
+      setOfferDescription("");
+      setOfferDiscount("");
+      setOfferValidUntil("");
+      setOfferImage("");
+      setOfferImageFile(null);
+      await loadOffers();
+      alert("Offer added successfully!");
+    } catch (error) {
+      console.error('Error adding offer:', error);
+      alert("Failed to add offer. Please try again.");
+    }
+  };
+
+  const deleteOfferById = async (id: string) => {
+    try {
+      await deleteOffer(id);
+      await loadOffers();
+    } catch (error) {
+      console.error('Error deleting offer:', error);
+      alert("Failed to delete offer. Please try again.");
+    }
+  };
+
+  const toggleOfferStatus = async (id: string) => {
+    const offer = offers.find(o => o.id === id);
+    if (!offer) return;
+    
+    try {
+      await updateOffer(id, { is_active: !offer.is_active });
+      await loadOffers();
+    } catch (error) {
+      console.error('Error updating offer:', error);
+      alert("Failed to update offer. Please try again.");
+    }
+  };
+
   const pinnedFeedbacks = feedbacks.filter(f => f.is_pinned);
   const unpinnedFeedbacks = feedbacks.filter(f => !f.is_pinned);
 
@@ -222,6 +333,12 @@ const AdminPanel: React.FC = () => {
           >
             Manage Feedbacks ({feedbacks.length})
           </Button>
+          <Button
+            onClick={() => setActiveTab('offers')}
+            variant={activeTab === 'offers' ? 'default' : 'outline'}
+          >
+            Manage Offers ({offers.length})
+          </Button>
         </div>
         
         {activeTab === 'works' && (
@@ -282,6 +399,110 @@ const AdminPanel: React.FC = () => {
                       >
                         <Trash2 size={16} />
                       </Button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </>
+        )}
+
+        {activeTab === 'offers' && (
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-lg border mb-8">
+              <h3 className="text-xl font-semibold text-foreground mb-6">Add New Offer</h3>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Offer Title"
+                  value={offerTitle}
+                  onChange={(e) => setOfferTitle(e.target.value)}
+                  className="w-full p-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <textarea
+                  placeholder="Offer Description"
+                  value={offerDescription}
+                  onChange={(e) => setOfferDescription(e.target.value)}
+                  rows={3}
+                  className="w-full p-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <input
+                  type="text"
+                  placeholder="Discount (e.g., 50% OFF)"
+                  value={offerDiscount}
+                  onChange={(e) => setOfferDiscount(e.target.value)}
+                  className="w-full p-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <input
+                  type="date"
+                  value={offerValidUntil}
+                  onChange={(e) => setOfferValidUntil(e.target.value)}
+                  className="w-full p-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-muted-foreground">
+                    Offer Image (Optional)
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleOfferImageUpload}
+                    className="w-full p-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  {offerImage && (
+                    <div className="mt-2">
+                      <img src={offerImage} alt="Offer Preview" className="w-32 h-32 object-cover rounded-lg" />
+                    </div>
+                  )}
+                </div>
+                <Button onClick={addNewOffer} className="w-full md:w-auto">
+                  Add Offer
+                </Button>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-lg border">
+              <h3 className="text-xl font-semibold text-foreground mb-6">All Offers ({offers.length})</h3>
+              <div className="space-y-3">
+                {offers.length === 0 ? (
+                  <p className="text-muted-foreground text-center py-8">No offers added yet</p>
+                ) : (
+                  offers.map((offer) => (
+                    <div key={offer.id} className="p-4 border border-border rounded-lg hover:bg-secondary/50 transition-colors">
+                      <div className="flex justify-between items-start mb-2">
+                        {offer.image && (
+                          <img src={offer.image} alt={offer.title} className="w-16 h-16 object-cover rounded-lg mr-4" />
+                        )}
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h4 className="font-semibold text-foreground">{offer.title}</h4>
+                            <span className={`px-2 py-1 text-xs rounded ${offer.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                              {offer.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-1">{offer.description}</p>
+                          <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+                            <span>Discount: {offer.discount}</span>
+                            <span>Valid until: {new Date(offer.valid_until).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2 ml-4">
+                          <Button
+                            onClick={() => toggleOfferStatus(offer.id)}
+                            variant="outline"
+                            size="sm"
+                          >
+                            {offer.is_active ? 'Deactivate' : 'Activate'}
+                          </Button>
+                          <Button
+                            onClick={() => deleteOfferById(offer.id)}
+                            variant="destructive"
+                            size="sm"
+                          >
+                            <Trash2 size={14} />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   ))
                 )}

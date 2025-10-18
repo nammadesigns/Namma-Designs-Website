@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Tag } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
@@ -37,6 +37,13 @@ const Header = () => {
             className={`transition-colors duration-300 ${isActive('/ourworks') ? 'text-primary font-semibold' : 'text-muted-foreground hover:text-primary'}`}
           >
             Our Works
+          </Link>
+          <Link 
+            to="/offers" 
+            className={`relative transition-colors duration-300 flex items-center space-x-1 ${isActive('/offers') ? 'text-primary font-semibold' : 'text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded-full font-bold'}`}
+          >
+            <Tag size={16} />
+            <span>OFFERS</span>
           </Link>
           <Link to="/contact">
             <Button 
@@ -77,6 +84,14 @@ const Header = () => {
             onClick={() => setIsMenuOpen(false)}
           >
             Our Works
+          </Link>
+          <Link 
+            to="/offers" 
+            className="flex items-center justify-center space-x-1 py-2 px-4 text-sm bg-red-500 text-white font-bold mx-4 my-2 rounded"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <Tag size={16} />
+            <span>OFFERS</span>
           </Link>
           <Link 
             to="/contact" 

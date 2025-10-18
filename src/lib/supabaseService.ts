@@ -17,6 +17,17 @@ export interface Feedback {
   created_at: string;
 }
 
+export interface Offer {
+  id: string;
+  title: string;
+  description: string;
+  discount: string;
+  valid_until: string;
+  is_active: boolean;
+  image?: string;
+  created_at: string;
+}
+
 // Works functions
 export const addWork = async (title: string, imageFile: File): Promise<void> => {
   try {
@@ -136,6 +147,79 @@ export const updateFeedback = async (id: string, updates: Partial<Feedback>): Pr
     if (error) throw error;
   } catch (error) {
     console.error('Error updating feedback:', error);
+    throw error;
+  }
+};
+
+// Offers functions
+export const addOffer = async (offer: Omit<Offer, 'id' | 'created_at'>): Promise<void> => {
+  try {
+    const { error } = await supabase
+      .from('offers')
+      .insert([offer]);
+
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error adding offer:', error);
+    throw error;
+  }
+};
+
+export const getOffers = async (): Promise<Offer[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('offers')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error getting offers:', error);
+    return [];
+  }
+};
+
+export const getActiveOffers = async (): Promise<Offer[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('offers')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error getting active offers:', error);
+    return [];
+  }
+};
+
+export const deleteOffer = async (id: string): Promise<void> => {
+  try {
+    const { error } = await supabase
+      .from('offers')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error deleting offer:', error);
+    throw error;
+  }
+};
+
+export const updateOffer = async (id: string, updates: Partial<Offer>): Promise<void> => {
+  try {
+    const { error } = await supabase
+      .from('offers')
+      .update(updates)
+      .eq('id', id);
+
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error updating offer:', error);
     throw error;
   }
 };

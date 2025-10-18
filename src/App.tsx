@@ -10,6 +10,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import OurWorks from "./pages/OurWorks";
 import Feedback from "./pages/Feedback";
+import Offers from "./pages/Offers";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import WhatsAppButton from "./components/WhatsAppButton";
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/ourworks" element={<OurWorks />} />
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/offers" element={<Offers />} />
           <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
