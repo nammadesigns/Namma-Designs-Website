@@ -161,15 +161,6 @@ const AdminPanel: React.FC = () => {
     
     const newPinnedStatus = !feedback.is_pinned;
     
-    // Check if trying to pin and already have 3 pinned
-    if (newPinnedStatus) {
-      const pinnedCount = feedbacks.filter(f => f.is_pinned && f.id !== id).length;
-      if (pinnedCount >= 3) {
-        alert("You can only pin up to 3 feedbacks");
-        return;
-      }
-    }
-    
     try {
       await updateFeedback(id, { is_pinned: newPinnedStatus });
       await loadFeedbacks();
@@ -517,7 +508,7 @@ const AdminPanel: React.FC = () => {
               <div className="bg-white p-6 rounded-lg shadow-lg border mb-8">
                 <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center">
                   <Pin className="mr-2 text-primary" size={20} />
-                  Pinned Feedbacks ({pinnedFeedbacks.length}/3)
+                  Pinned Feedbacks ({pinnedFeedbacks.length})
                 </h3>
                 <div className="space-y-3">
                   {pinnedFeedbacks.map((feedback) => (
@@ -581,7 +572,6 @@ const AdminPanel: React.FC = () => {
                           onClick={() => togglePinFeedback(feedback.id)}
                           variant="outline"
                           size="sm"
-                          disabled={pinnedFeedbacks.length >= 3}
                         >
                           <Pin size={14} />
                         </Button>
