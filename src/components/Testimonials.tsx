@@ -18,7 +18,7 @@ const Testimonials = () => {
     try {
       const feedbacksData = await getFeedbacks();
       const pinnedFeedbacks = feedbacksData.filter(f => f.is_pinned);
-      setTestimonials(pinnedFeedbacks.slice(0, 3));
+      setTestimonials(pinnedFeedbacks.slice(0, 6));
     } catch (error) {
       console.error('Error loading feedbacks:', error);
     }
@@ -34,9 +34,9 @@ const Testimonials = () => {
         <div className={`grid gap-8 ${
           testimonials.length === 1 
             ? 'grid-cols-1 place-items-center max-w-md mx-auto' 
-            : 'grid-cols-1 md:grid-cols-3'
+            : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
         }`}>
-          {testimonials.slice(0, 3).map((testimonial) => (
+          {testimonials.map((testimonial) => (
             <Card key={testimonial.id} className="hover:shadow-lg transition-shadow w-full">
               <CardHeader>
                 <div className="flex items-center gap-1 mb-2">
