@@ -23,9 +23,9 @@ const MyWorks: React.FC = () => {
   return (
     <section
       id="my-works"
-      className="min-h-screen bg-[url('/images/board-bg.jpg')] bg-cover bg-center py-16"
+      className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/10 py-16"
     >
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-900 drop-shadow-lg px-4">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-12 text-foreground px-4">
         ✨ Our Works ✨
       </h2>
 

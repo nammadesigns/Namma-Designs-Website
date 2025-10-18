@@ -62,13 +62,13 @@ const OurWorks: React.FC = () => {
       </section>
 
       {/* Works Grid */}
-      <section className="py-8 sm:py-12 lg:py-16 bg-[url('/images/board-bg.jpg')] bg-cover bg-center min-h-screen">
+      <section className="py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-primary/5 to-secondary/10 min-h-screen">
         <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 drop-shadow-lg mb-2 sm:mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 sm:mb-4">
               ✨ Complete Portfolio ✨
             </h2>
-            <p className="text-sm sm:text-base text-gray-700 drop-shadow-sm">
+            <p className="text-sm sm:text-base text-muted-foreground">
               Showcasing {works.length} amazing designs
             </p>
           </div>
