@@ -1,6 +1,4 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/((?!api|sitemap\\.xml|robots\\.txt|favicon\\.ico|.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)).*)",
