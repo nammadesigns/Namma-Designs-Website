@@ -25,7 +25,7 @@ const PinnedFrame: React.FC<PinnedFrameProps> = ({ image, title }) => {
       {/* Frame */}
       <div
         onClick={() => setIsOpen(true)}
-        className="relative bg-white shadow-xl rounded-xl p-4 w-64 h-72 sm:w-72 sm:h-80 flex flex-col items-center justify-between transform rotate-[-2deg] hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer"
+        className="relative bg-white shadow-xl rounded-xl p-4 w-60 h-72 sm:w-64 sm:h-80 md:w-72 md:h-80 flex flex-col items-center justify-between transform rotate-[-2deg] hover:rotate-0 hover:scale-105 transition-all duration-300 cursor-pointer mx-auto"
       >
         {/* Push pin */}
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-red-500 rounded-full shadow-md border-2 border-gray-200 z-10"></div>

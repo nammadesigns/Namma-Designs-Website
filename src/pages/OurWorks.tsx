@@ -84,9 +84,9 @@ const OurWorks: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 justify-items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 place-items-center">
               {works.map((work) => (
-                <div key={work.id} className="transform hover:scale-105 transition-transform duration-300 w-full max-w-sm">
+                <div key={work.id} className="flex justify-center">
                   <PinnedFrame image={work.image} title={work.title} />
                 </div>
               ))}
