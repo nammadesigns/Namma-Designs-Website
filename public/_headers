@@ -1,3 +1,7 @@
+/sitemap.xml
+  Content-Type: application/xml
+  Cache-Control: public, max-age=3600
+
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
