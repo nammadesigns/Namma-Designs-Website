@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
 import { useReveal } from "@/hooks/useReveal";
+import { useSEO } from "@/hooks/useSEO";
+import { SEO } from "@/lib/seo";
 
 /* ── Shared split-section component ── */
 interface ServiceSectionProps {
@@ -82,6 +84,7 @@ const ServiceSection = ({
 
 /* ── Page ── */
 const ServicesPage = () => {
+  useSEO(SEO.services);
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (

@@ -4,6 +4,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { addFeedback, getFeedbacks, LocalFeedback as Feedback } from "../lib/localStorageService";
 import { useToast } from "../hooks/use-toast";
+import { useSEO } from "@/hooks/useSEO";
+import { SEO } from "@/lib/seo";
 
 const sampleFeedbacks: Feedback[] = [
   { id: "1", customer_name: "Sathyanarayana H R", rating: 5, feedback_text: "Super work on time, low cost, quick response every time. Professional services on editing, creating cards, Instagram promotions and more.", date: "18/10/2025", is_pinned: true,  created_at: "2024-10-18" },
@@ -63,6 +65,7 @@ const inputCls =
 
 /* ── Page ── */
 const FeedbackPage: React.FC = () => {
+  useSEO(SEO.feedback);
   const { toast } = useToast();
   const [feedbacks, setFeedbacks]     = useState<Feedback[]>(sampleFeedbacks);
   const [name, setName]               = useState("");

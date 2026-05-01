@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
 import { getWorks, LocalWork as Work } from "../lib/localStorageService";
 import { worksData } from "../data/worksData";
+import { useSEO } from "@/hooks/useSEO";
+import { SEO } from "@/lib/seo";
 
 /* ─────────────────────────────────────────
    GRAPHIC DESIGN — category map + filters
@@ -88,6 +90,7 @@ type Tab = "all" | "graphic" | "web";
    PAGE
 ───────────────────────────────────────── */
 const OurWorks: React.FC = () => {
+  useSEO(SEO.ourworks);
   const [works, setWorks]       = useState<Work[]>(worksData);
   const [tab, setTab]           = useState<Tab>("all");
   const [gdFilter, setGdFilter] = useState<GDFilter>("All");

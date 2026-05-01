@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://namma-designs.vercel.app/sitemap.xml
+Sitemap: https://www.nammadesigns.site/sitemap.xml

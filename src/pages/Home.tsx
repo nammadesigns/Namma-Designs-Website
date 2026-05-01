@@ -9,8 +9,11 @@ import Process from "@/components/Process";
 import Stats from "@/components/Stats";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
+import { useSEO } from "@/hooks/useSEO";
+import { SEO } from "@/lib/seo";
 
 const Home = () => {
+  useSEO(SEO.home);
   const location = useLocation();
 
   useEffect(() => {

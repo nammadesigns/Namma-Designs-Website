@@ -7,6 +7,8 @@ import emailjs from "@emailjs/browser";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
+import { useSEO } from "@/hooks/useSEO";
+import { SEO } from "@/lib/seo";
 import { Loader2, Mail, Phone, MessageCircle, Clock, ShieldCheck } from "lucide-react";
 import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
@@ -31,6 +33,7 @@ const inputCls =
   "w-full px-4 py-3 text-sm bg-white border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all duration-200";
 
 const Contact = () => {
+  useSEO(SEO.contact);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);

@@ -6,7 +6,7 @@ A premium, agency-level website for **Namma Designs**, a creative design studio 
 
 ## Live Site
 
-Deployed on **Vercel** → [nammadesigns.vercel.app](https://nammadesigns.vercel.app)
+Deployed on **Vercel** → [www.nammadesigns.site](https://www.nammadesigns.site)
 
 ---
 

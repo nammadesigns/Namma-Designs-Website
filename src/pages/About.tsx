@@ -4,6 +4,8 @@ import Footer from "@/components/Footer";
 import CTASection from "@/components/CTASection";
 import Stats from "@/components/Stats";
 import { useReveal } from "@/hooks/useReveal";
+import { useSEO } from "@/hooks/useSEO";
+import { SEO } from "@/lib/seo";
 import { DollarSign, Star, Zap, Lightbulb } from "lucide-react";
 
 const values = [
@@ -30,6 +32,7 @@ const values = [
 ];
 
 const About = () => {
+  useSEO(SEO.about);
   const storyRef = useReveal();
   const valuesRef = useReveal();
 
