@@ -75,6 +75,13 @@ const webProjects: WebProject[] = [
     url: "https://malnad-eco-stay.vercel.app/",
     tag: "Hospitality",
   },
+  {
+    id: "w6",
+    title: "OM Exports",
+    description: "OM Exports agricultural export industry Website .",
+    url: "https://omexports.info",
+    tag: "Business",
+  },
 ];
 
 /* Screenshot via microlink — no API key needed for basic use */
